@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareReviewApp", "ShareReviewApp\ShareReviewApp.csproj", "{99AFDC52-1182-4A23-AB24-6948C1139D72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareReviewApp.Tests", "ShareReviewApp.Tests\ShareReviewApp.Tests.csproj", "{5CDCE1EE-0BB3-4578-A842-7E4ABF3A1980}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +15,9 @@ Global
 		{99AFDC52-1182-4A23-AB24-6948C1139D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99AFDC52-1182-4A23-AB24-6948C1139D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99AFDC52-1182-4A23-AB24-6948C1139D72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CDCE1EE-0BB3-4578-A842-7E4ABF3A1980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CDCE1EE-0BB3-4578-A842-7E4ABF3A1980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CDCE1EE-0BB3-4578-A842-7E4ABF3A1980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CDCE1EE-0BB3-4578-A842-7E4ABF3A1980}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
