@@ -51,6 +51,16 @@ public class ReviewsController : ControllerBase
         }
     }
 
+    [HttpPost("{id:guid}/helpful")]
+    public async Task<ActionResult<ReviewResponse>> VoteHelpful(Guid id)
+    {
+        var review = await _reviewService.VoteHelpfulAsync(id);
+        if (review is null)
+            return NotFound();
+
+        return Ok(review);
+    }
+
     // Leading slash overrides the controller-level route prefix
     [HttpGet("/api/products/{productId:guid}/reviews")]
     public async Task<ActionResult<IEnumerable<ReviewResponse>>> GetByProductId(Guid productId)

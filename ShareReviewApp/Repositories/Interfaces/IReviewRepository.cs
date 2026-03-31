@@ -9,4 +9,5 @@ public interface IReviewRepository
     Task<Review> CreateAsync(Review review);
     Task<IEnumerable<Review>> GetByProductIdAsync(Guid productId);
     Task<Review?> GetByUserAndProductAsync(Guid userId, Guid productId);
+    Task<Review> UpdateAsync(Review review);
 }

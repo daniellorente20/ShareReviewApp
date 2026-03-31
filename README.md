@@ -56,3 +56,9 @@ dotnet test
 - Write a review — modal with product selector and star rating (1–10)
 - Product modal — click any product to see its reviews and average rating
 - Duplicate prevention — one review per user per product enforced at API level
+- Helpful voting — mark reviews as helpful with a 👍 counter per review
+- Sort feed — by newest, highest rating, or lowest rating
+
+## Known limitations
+
+- **Helpful voting is not deduplicated**: the same user can vote helpful multiple times on the same review. A production implementation would require a `ReviewVotes(UserId, ReviewId)` table to enforce one vote per user. Omitted intentionally to keep scope within the exercise timeframe.

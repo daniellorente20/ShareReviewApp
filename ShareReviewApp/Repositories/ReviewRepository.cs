@@ -43,4 +43,11 @@ public class ReviewRepository : IReviewRepository
         return await _context.Reviews
             .FirstOrDefaultAsync(r => r.UserId == userId && r.ProductId == productId);
     }
+
+    public async Task<Review> UpdateAsync(Review review)
+    {
+        _context.Reviews.Update(review);
+        await _context.SaveChangesAsync();
+        return review;
+    }
 }

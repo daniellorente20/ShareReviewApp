@@ -14,6 +14,7 @@ export interface Review {
   productCategory: string;
   comment: string;
   rating: number;
+  helpfulCount: number;
   createdAt: string;
 }
 
