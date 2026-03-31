@@ -10,6 +10,8 @@ export interface Review {
   id: string;
   userId: string;
   productId: string;
+  productName: string;
+  productCategory: string;
   comment: string;
   rating: number;
   createdAt: string;

@@ -19,7 +19,32 @@ public class ReviewServiceTests
         _mockReviewRepo = new Mock<IReviewRepository>();
         _mockUserRepo = new Mock<IUserRepository>();
         _mockProductRepo = new Mock<IProductRepository>();
+
+        // Default: GetAllAsync returns empty list so ToDictionary never receives null
+        _mockProductRepo.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<Product>());
+
         _service = new ReviewService(_mockReviewRepo.Object, _mockUserRepo.Object, _mockProductRepo.Object);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ReturnsAllReviews_WithProductInfo()
+    {
+        var productId = Guid.NewGuid();
+        var product = new Product { Id = productId, Name = "GitHub", Description = "", Category = "Development", CreatedAt = DateTime.UtcNow };
+        var reviews = new List<Review>
+        {
+            new() { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), ProductId = productId, Comment = "Great!", Rating = 9, CreatedAt = DateTime.UtcNow },
+            new() { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), ProductId = productId, Comment = "Solid.", Rating = 8, CreatedAt = DateTime.UtcNow }
+        };
+
+        _mockReviewRepo.Setup(r => r.GetAllAsync()).ReturnsAsync(reviews);
+        _mockProductRepo.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<Product> { product });
+
+        var result = await _service.GetAllAsync();
+
+        Assert.Equal(2, result.Count());
+        Assert.All(result, r => Assert.Equal("GitHub", r.ProductName));
+        Assert.All(result, r => Assert.Equal("Development", r.ProductCategory));
     }
 
     [Fact]
@@ -93,6 +118,7 @@ public class ReviewServiceTests
             new() { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), ProductId = productId, Comment = "Excellent", Rating = 5, CreatedAt = DateTime.UtcNow }
         };
         _mockReviewRepo.Setup(r => r.GetByProductIdAsync(productId)).ReturnsAsync(reviews);
+        _mockProductRepo.Setup(r => r.GetByIdAsync(productId)).ReturnsAsync((Product?)null);
 
         var result = await _service.GetByProductIdAsync(productId);
 

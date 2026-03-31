@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { createReview } from '../api/reviews'
+import StarPicker from './StarPicker'
 
 interface Props {
   productId: string
@@ -39,20 +40,8 @@ export default function ReviewForm({ productId, onSuccess }: Props) {
       </p>
 
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700">
-          Puntuación: <span className="text-indigo-600 font-semibold">{rating}</span> / 10
-        </label>
-        <input
-          type="range"
-          min={1}
-          max={10}
-          value={rating}
-          onChange={e => setRating(Number(e.target.value))}
-          className="accent-indigo-600"
-        />
-        <div className="flex justify-between text-xs text-gray-400">
-          <span>1</span><span>10</span>
-        </div>
+        <label className="text-sm font-medium text-gray-700">Puntuación</label>
+        <StarPicker value={rating} onChange={setRating} />
       </div>
 
       <div className="flex flex-col gap-1">

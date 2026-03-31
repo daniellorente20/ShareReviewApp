@@ -24,13 +24,19 @@ public class ReviewService
     public virtual async Task<IEnumerable<ReviewResponse>> GetAllAsync()
     {
         var reviews = await _reviewRepository.GetAllAsync();
-        return reviews.Select(MapToResponse);
+        var products = (await _productRepository.GetAllAsync())
+            .ToDictionary(p => p.Id);
+
+        return reviews.Select(r => MapToResponse(r, products.GetValueOrDefault(r.ProductId)));
     }
 
     public virtual async Task<ReviewResponse?> GetByIdAsync(Guid id)
     {
         var review = await _reviewRepository.GetByIdAsync(id);
-        return review is null ? null : MapToResponse(review);
+        if (review is null) return null;
+
+        var product = await _productRepository.GetByIdAsync(review.ProductId);
+        return MapToResponse(review, product);
     }
 
     public virtual async Task<ReviewResponse> CreateAsync(CreateReviewRequest request)
@@ -58,20 +64,23 @@ public class ReviewService
         };
 
         var created = await _reviewRepository.CreateAsync(review);
-        return MapToResponse(created);
+        return MapToResponse(created, product);
     }
 
     public virtual async Task<IEnumerable<ReviewResponse>> GetByProductIdAsync(Guid productId)
     {
         var reviews = await _reviewRepository.GetByProductIdAsync(productId);
-        return reviews.Select(MapToResponse);
+        var product = await _productRepository.GetByIdAsync(productId);
+        return reviews.Select(r => MapToResponse(r, product));
     }
 
-    private static ReviewResponse MapToResponse(Review review) => new()
+    private static ReviewResponse MapToResponse(Review review, Product? product) => new()
     {
         Id = review.Id,
         UserId = review.UserId,
         ProductId = review.ProductId,
+        ProductName = product?.Name ?? string.Empty,
+        ProductCategory = product?.Category ?? string.Empty,
         Comment = review.Comment,
         Rating = review.Rating,
         CreatedAt = review.CreatedAt
