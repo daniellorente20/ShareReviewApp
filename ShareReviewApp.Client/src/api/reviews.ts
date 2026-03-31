@@ -12,6 +12,12 @@ export async function getReviewsByProduct(productId: string): Promise<Review[]> 
   return res.json();
 }
 
+export async function voteHelpful(reviewId: string): Promise<Review> {
+  const res = await fetch(`/api/reviews/${reviewId}/helpful`, { method: 'POST' });
+  if (!res.ok) throw new Error('Failed to vote');
+  return res.json();
+}
+
 export async function createReview(data: CreateReviewRequest): Promise<Review> {
   const res = await fetch('/api/reviews', {
     method: 'POST',

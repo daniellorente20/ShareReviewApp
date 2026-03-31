@@ -125,4 +125,53 @@ public class ReviewServiceTests
         Assert.Equal(2, result.Count());
         Assert.All(result, r => Assert.Equal(productId, r.ProductId));
     }
+
+    [Fact]
+    public async Task VoteHelpfulAsync_IncrementsHelpfulCount_WhenReviewExists()
+    {
+        var reviewId = Guid.NewGuid();
+        var productId = Guid.NewGuid();
+        var review = new Review { Id = reviewId, UserId = Guid.NewGuid(), ProductId = productId, Comment = "Great!", Rating = 8, HelpfulCount = 2, CreatedAt = DateTime.UtcNow };
+
+        _mockReviewRepo.Setup(r => r.GetByIdAsync(reviewId)).ReturnsAsync(review);
+        _mockReviewRepo.Setup(r => r.UpdateAsync(It.IsAny<Review>())).ReturnsAsync((Review r) => r);
+        _mockProductRepo.Setup(r => r.GetByIdAsync(productId)).ReturnsAsync((Product?)null);
+
+        var result = await _service.VoteHelpfulAsync(reviewId);
+
+        Assert.NotNull(result);
+        Assert.Equal(3, result.HelpfulCount);
+        _mockReviewRepo.Verify(r => r.UpdateAsync(It.Is<Review>(rv => rv.HelpfulCount == 3)), Times.Once);
+    }
+
+    [Fact]
+    public async Task VoteHelpfulAsync_ReturnsNull_WhenReviewNotFound()
+    {
+        var reviewId = Guid.NewGuid();
+        _mockReviewRepo.Setup(r => r.GetByIdAsync(reviewId)).ReturnsAsync((Review?)null);
+
+        var result = await _service.VoteHelpfulAsync(reviewId);
+
+        Assert.Null(result);
+        _mockReviewRepo.Verify(r => r.UpdateAsync(It.IsAny<Review>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task VoteHelpfulAsync_IncludesProductInfo_InResponse()
+    {
+        var reviewId = Guid.NewGuid();
+        var productId = Guid.NewGuid();
+        var review = new Review { Id = reviewId, UserId = Guid.NewGuid(), ProductId = productId, Comment = "Solid", Rating = 7, HelpfulCount = 0, CreatedAt = DateTime.UtcNow };
+        var product = new Product { Id = productId, Name = "GitHub", Description = "", Category = "Development", CreatedAt = DateTime.UtcNow };
+
+        _mockReviewRepo.Setup(r => r.GetByIdAsync(reviewId)).ReturnsAsync(review);
+        _mockReviewRepo.Setup(r => r.UpdateAsync(It.IsAny<Review>())).ReturnsAsync((Review r) => r);
+        _mockProductRepo.Setup(r => r.GetByIdAsync(productId)).ReturnsAsync(product);
+
+        var result = await _service.VoteHelpfulAsync(reviewId);
+
+        Assert.NotNull(result);
+        Assert.Equal("GitHub", result.ProductName);
+        Assert.Equal("Development", result.ProductCategory);
+    }
 }

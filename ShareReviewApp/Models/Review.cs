@@ -7,5 +7,6 @@ public class Review
     public Guid ProductId { get; set; }
     public string Comment { get; set; } = string.Empty;
     public int Rating { get; set; }
+    public int HelpfulCount { get; set; }
     public DateTime CreatedAt { get; set; }
 }

@@ -67,6 +67,18 @@ public class ReviewService
         return MapToResponse(created, product);
     }
 
+    public virtual async Task<ReviewResponse?> VoteHelpfulAsync(Guid reviewId)
+    {
+        var review = await _reviewRepository.GetByIdAsync(reviewId);
+        if (review is null) return null;
+
+        review.HelpfulCount++;
+        await _reviewRepository.UpdateAsync(review);
+
+        var product = await _productRepository.GetByIdAsync(review.ProductId);
+        return MapToResponse(review, product);
+    }
+
     public virtual async Task<IEnumerable<ReviewResponse>> GetByProductIdAsync(Guid productId)
     {
         var reviews = await _reviewRepository.GetByProductIdAsync(productId);
@@ -83,6 +95,7 @@ public class ReviewService
         ProductCategory = product?.Category ?? string.Empty,
         Comment = review.Comment,
         Rating = review.Rating,
+        HelpfulCount = review.HelpfulCount,
         CreatedAt = review.CreatedAt
     };
 }
