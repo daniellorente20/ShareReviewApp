@@ -6,12 +6,15 @@ import ReviewCard from '../components/ReviewCard'
 import QuickReviewModal from '../components/QuickReviewModal'
 import ProductModal from '../components/ProductModal'
 
+type SortBy = 'date-desc' | 'rating-desc' | 'rating-asc'
+
 export default function ReviewFeedPage() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
+  const [sortBy, setSortBy] = useState<SortBy>('date-desc')
   const [showDropdown, setShowDropdown] = useState(false)
   const [quickReviewOpen, setQuickReviewOpen] = useState(false)
   const [quickReviewProductId, setQuickReviewProductId] = useState<string | undefined>()
@@ -49,8 +52,12 @@ export default function ReviewFeedPage() {
         r.comment?.toLowerCase().includes(q)
       )
     }
-    return result
-  }, [reviews, category, search])
+    return [...result].sort((a, b) => {
+      if (sortBy === 'rating-desc') return b.rating - a.rating
+      if (sortBy === 'rating-asc') return a.rating - b.rating
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
+  }, [reviews, category, search, sortBy])
 
   function openProductModal(productId: string) {
     const p = products.find(x => x.id === productId)
@@ -65,7 +72,7 @@ export default function ReviewFeedPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Top bar */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <button
           type="button"
           onClick={() => openQuickReview()}
@@ -106,6 +113,17 @@ export default function ReviewFeedPage() {
             </ul>
           )}
         </div>
+
+        {/* Sort */}
+        <select
+          value={sortBy}
+          onChange={e => setSortBy(e.target.value as SortBy)}
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white cursor-pointer"
+        >
+          <option value="date-desc">Más recientes</option>
+          <option value="rating-desc">Mayor rating</option>
+          <option value="rating-asc">Menor rating</option>
+        </select>
       </div>
 
       {/* Category chips */}

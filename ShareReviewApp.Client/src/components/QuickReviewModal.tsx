@@ -44,7 +44,7 @@ export default function QuickReviewModal({ products, initialProductId, onClose, 
         className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-gray-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Write a Review</h2>
           <button
             type="button"
@@ -55,7 +55,7 @@ export default function QuickReviewModal({ products, initialProductId, onClose, 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 flex flex-col gap-4">
           <p className="text-xs text-gray-500">
             Publicando como <span className="font-semibold text-gray-700">{currentUser?.name}</span>
           </p>

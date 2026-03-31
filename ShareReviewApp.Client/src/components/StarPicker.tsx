@@ -9,7 +9,7 @@ export default function StarPicker({ value, onChange }: Props) {
   const [hovered, setHovered] = useState<number | null>(null)
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 overflow-x-auto">
       {Array.from({ length: 10 }, (_, i) => i + 1).map(n => {
         const active = n <= (hovered ?? value)
         return (

@@ -33,7 +33,7 @@ export default function ProductModal({ product, onClose, onLeaveReview }: Props)
         className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] flex flex-col"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-gray-100 flex items-start justify-between gap-4">
+        <div className="p-4 sm:p-6 border-b border-gray-100 flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-xl font-bold text-gray-900">{product.name}</h2>
@@ -58,7 +58,7 @@ export default function ProductModal({ product, onClose, onLeaveReview }: Props)
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-3">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col gap-3">
           {loading && <p className="text-sm text-gray-400">Cargando reseñas…</p>}
           {!loading && reviews.length === 0 && (
             <p className="text-sm text-gray-400">No hay reseñas todavía. ¡Sé el primero!</p>
